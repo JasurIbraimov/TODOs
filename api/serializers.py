@@ -1,16 +1,38 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from .models import Category, Todo
 
 
 class UserSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = User
-		fields = ["id", "username", "password"]
-		extra_kwargs = {
-			"password": { "write_only": True }
-		}
+    class Meta:
+        model = User
+        fields = ["id", "username", "password"]
+        extra_kwargs = {
+            "password": {"write_only": True}
+        }
 
-	def create(self, validated_data):
-		user = User.objects.create_user(**validated_data)
-		return user
-	
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ["id", "title", "created_at", "user", "color"]
+        extra_kwargs = {
+            "user": {
+                "read_only": True
+            }
+        }
+
+
+class TodoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Todo
+        fields = ["id", "title", "created_at", "user", "category"]
+        extra_kwargs = {
+            "user": {
+                "read_only": True,
+            }
+        }
